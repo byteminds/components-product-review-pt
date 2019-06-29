@@ -7,15 +7,13 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino);
 
-app.get("/api/:productId/:reviewId/", (req, res) => {
-  // const name = req.query.name || "World";
-  // res.setHeader("Content-Type", "application/json");
-  // res.send(JSON.stringify({ greeting: `Hello ${name}!` }));
-
+app.get("/api/:productId/", (req, res) => {
   const productId = req.params.productId;
-  const reviewId = req.params.reviewId;
-  db.saveFakeData();
-  res.send(req.url);
+  db.getReviews(productId, (err, reviews) => {
+    if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
+    res.send(reviews);
+  });
+  //res.send(req.url);
 });
 
 app.listen(3001, () => console.log("Server is running on localhost:3001"));

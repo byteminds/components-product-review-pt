@@ -1,3 +1,4 @@
+const fakedata = require("./fakedata");
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/reviewdb", { useNewUrlParser: true });
 
@@ -13,16 +14,16 @@ let reviewSchema = mongoose.Schema({
 });
 
 let Reviews = mongoose.model("Reviews", reviewSchema);
-
-let getReviews = (productId, callback) => {
-  Reviews.find({ productId: productId })
-    .sort({ reviewDate: -1 })
-    .exec((err, data) => {
-      if (err) throw err;
-      //console.log("DATA: ", data);
-      callback(err, data);
-    });
+let saveFakeData = () => {
+  var reviewsDataSet = fakedata.genFakeReviews(1000);
+  Reviews.insertMany(reviewsDataSet, (err, docs) => {
+    if (err) console.log("ERROR SAVING TO MONGODB => ", err);
+    console.log("SUCCESSFUL SAVE");
+  });
 };
 
+//Init seed list
+saveFakeData();
+
 // module.exports.save = save;
-module.exports = { getReviews };
+module.exports = { saveFakeData };
