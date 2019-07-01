@@ -24,5 +24,24 @@ let getReviews = (productId, callback) => {
     });
 };
 
-// module.exports.save = save;
-module.exports = { getReviews };
+let getReviewSummary = (productId, callback) => {
+  var tmp = 0;
+  var avg = 0;
+  Reviews.find({ productId: productId })
+    .sort({ reviewDate: -1 })
+    .exec((err, data) => {
+      if (err) throw err;
+      //console.log("DATA: ", data);
+      data.forEach(review => {
+        tmp += review.rating;
+      });
+      avg = tmp / data.length;
+      callback(err, {
+        productId: productId,
+        avgRating: avg,
+        totalReviews: data.length
+      });
+    });
+};
+
+module.exports = { getReviews, getReviewSummary };
