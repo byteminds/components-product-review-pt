@@ -3,7 +3,7 @@ var SRC_DIR = path.join(__dirname, "/client/src");
 var DIST_DIR = path.join(__dirname, "/client/dist");
 
 const nodeExternals = require("webpack-node-externals");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+//const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: `${SRC_DIR}/index.jsx`,
@@ -11,12 +11,12 @@ module.exports = {
     filename: "bundle.js",
     path: DIST_DIR
   },
-  target: "node",
-  externals: [nodeExternals()],
+  //target: "node",
+  //externals: [nodeExternals()],
   module: {
     rules: [
       {
-        test: /\.jsx?/,
+        test: /\.(js|jsx)$/,
         include: SRC_DIR,
         exclude: /node_modules/,
         loader: "babel-loader",
@@ -26,13 +26,8 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", MiniCssExtractPlugin.loader, "css-loader"]
+        use: ["style-loader", "css-loader"]
       }
     ]
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: "style.css"
-    })
-  ]
+  }
 };
