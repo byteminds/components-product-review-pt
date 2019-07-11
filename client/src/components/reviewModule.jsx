@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReviewSummaryPane from "./reviewSummaryPane.jsx";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+
 import Grid from "@material-ui/core/Grid";
 import ReviewDetails from "./reviewDetails.jsx";
 
@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     textAlign: "center",
     color: theme.palette.text.secondary
   }
@@ -22,14 +22,11 @@ export default function ReviewModule(props) {
     <div className={classes.root}>
       <Grid container spacing={1}>
         <Grid item xs={2}>
-          <ReviewSummaryPane />
+          <ReviewSummaryPane reviewsummary={props.reviewsummary} />
         </Grid>
-        <Grid item xs={8}>
-          <Paper className={classes.paper}>
-            <ReviewDetails reviewdataset={props.reviewdataset} />
-          </Paper>
+        <Grid item xs={10}>
+          <ReviewDetails reviewdataset={props.reviewdataset} />
         </Grid>
-        <Grid item xs={2} />
       </Grid>
     </div>
   );

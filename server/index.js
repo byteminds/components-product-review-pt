@@ -7,9 +7,9 @@ const path = require("path");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino);
-app.use(express.static(path.join(__dirname, "../client/dist/")));
+app.use("/:productId", express.static(path.join(__dirname, "../client/dist")));
 
-app.get("/api/:productId/", (req, res) => {
+app.get("/api/:productId", (req, res) => {
   const productId = req.params.productId;
   db.getReviews(productId, (err, reviews) => {
     if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
@@ -23,7 +23,6 @@ app.get("/api/:productId/summary", (req, res) => {
     if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
     res.send(reviews);
   });
-  //res.send(req.url);
 });
 
 app.listen(3001, () => console.log("Server is running on localhost:3001"));

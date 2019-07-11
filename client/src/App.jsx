@@ -7,20 +7,56 @@ const axios = require("axios");
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { productId: 1, reviewDataSet: [] };
+    this.state = {
+      productId: 1,
+      reviewDataSet: [],
+      summary: { total: -1, avgRating: -1 }
+    };
+  }
+
+  roundToHalf(value) {
+    var converted = parseFloat(value); // Make sure we have a number
+    var decimal = converted - parseInt(converted, 10);
+    decimal = Math.round(decimal * 10);
+    if (decimal == 5) {
+      return parseInt(converted, 10) + 0.5;
+    }
+    if (decimal < 3 || decimal > 7) {
+      return Math.round(converted);
+    } else {
+      return parseInt(converted, 10) + 0.5;
+    }
   }
 
   componentDidMount() {
+    var urlparse = window.location.href.split("/");
+    var productId = urlparse[urlparse.length - 2];
+
     axios
-      .get("/api/1")
+      .get(`/api/${productId}`)
       .then(res => {
-        console.log("RES.DATA ==> ", res.data);
         this.setState({
           reviewDataSet: res.data
+        });
+        return res.data;
+      })
+      .then(data => {
+        var sumRating = 0;
+        data.forEach(el => {
+          sumRating += el.rating;
+        });
+        var avgRating = sumRating / data.length;
+        avgRating = this.roundToHalf(avgRating);
+        this.setState({
+          summary: {
+            total: data.length,
+            avgRating: avgRating
+          }
         });
       })
       .catch(err => console.log("ERROR: axios.get /api/:productId", err));
   }
+
   render() {
     return (
       <div className="App">
@@ -28,6 +64,7 @@ class App extends React.Component {
           <ReviewModule
             productid={this.state.productId}
             reviewdataset={this.state.reviewDataSet}
+            reviewsummary={this.state.summary}
           />
         ) : (
           <div>
