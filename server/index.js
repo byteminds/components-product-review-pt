@@ -3,10 +3,12 @@ const bodyParser = require("body-parser");
 const pino = require("express-pino-logger")();
 const db = require("../database/index");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino);
+app.use(cors());
 app.use("/:productId", express.static(path.join(__dirname, "../client/dist")));
 
 app.get("/api/:productId", (req, res) => {
