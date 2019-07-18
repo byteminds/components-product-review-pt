@@ -15,6 +15,7 @@ let reviewSchema = mongoose.Schema({
 let Reviews = mongoose.model("Reviews", reviewSchema);
 
 let getReviews = (productId, callback) => {
+  console.log("GET REVIEW ID", productId);
   Reviews.find({ productId: productId })
     .sort({ reviewDate: -1 })
     .exec((err, data) => {

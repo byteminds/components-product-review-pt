@@ -1,18 +1,17 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const pino = require("express-pino-logger")();
 const db = require("../database/index");
 const path = require("path");
-const cors = require("cors");
+// const cors = require("cors");
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(pino);
-app.use(cors());
-app.use("/:productId", express.static(path.join(__dirname, "../client/dist")));
 
-app.get("/api/:productId", (req, res) => {
+// app.use(cors());
+app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use("/reviews/:productId", express.static(path.join(__dirname, "../client/dist")));
+
+app.get("/reviews/api/:productId", (req, res) => {
   const productId = req.params.productId;
+  console.log("SERVER PRODUCTID ===> ", req.originalurl);
   db.getReviews(productId, (err, reviews) => {
     if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
     res.send(reviews);

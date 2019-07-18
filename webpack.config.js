@@ -2,7 +2,7 @@ var path = require("path");
 var SRC_DIR = path.join(__dirname, "/client/src");
 var DIST_DIR = path.join(__dirname, "/client/dist");
 
-const nodeExternals = require("webpack-node-externals");
+//const nodeExternals = require("webpack-node-externals");
 //const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(jsx)$/,
         include: SRC_DIR,
         exclude: /node_modules/,
         loader: "babel-loader",

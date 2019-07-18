@@ -31,29 +31,41 @@ class App extends React.Component {
   componentDidMount() {
     var urlparse = window.location.href.split("/");
     var productId = urlparse[urlparse.length - 2];
+    console.log("URLPARSER ===> ", urlparse);
 
     axios
-      .get(`/api/${productId}`)
+      .get(`/reviews/api/${productId}`)
       .then(res => {
         this.setState({
           reviewDataSet: res.data
         });
-        return res.data;
-      })
-      .then(data => {
         var sumRating = 0;
-        data.forEach(el => {
+        res.data.forEach(el => {
           sumRating += el.rating;
         });
-        var avgRating = sumRating / data.length;
+        var avgRating = sumRating / res.data.length;
         avgRating = this.roundToHalf(avgRating);
         this.setState({
           summary: {
-            total: data.length,
+            total: res.data.length,
             avgRating: avgRating
           }
         });
       })
+      // .then(data => {
+      //   var sumRating = 0;
+      //   data.forEach(el => {
+      //     sumRating += el.rating;
+      //   });
+      //   var avgRating = sumRating / data.length;
+      //   avgRating = this.roundToHalf(avgRating);
+      //   this.setState({
+      //     summary: {
+      //       total: data.length,
+      //       avgRating: avgRating
+      //     }
+      //   });
+      // })
       .catch(err => console.log("ERROR: axios.get /api/:productId", err));
   }
 
