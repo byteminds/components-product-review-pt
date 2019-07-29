@@ -11,7 +11,6 @@ app.use("/reviews/:productId", express.static(path.join(__dirname, "../client/di
 
 app.get("/reviews/api/:productId", (req, res) => {
   const productId = req.params.productId;
-  console.log("SERVER PRODUCTID ===> ", req.originalurl);
   db.getReviews(productId, (err, reviews) => {
     if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
     res.send(reviews);
@@ -26,4 +25,4 @@ app.get("/api/:productId/summary", (req, res) => {
   });
 });
 
-app.listen(3001, () => console.log("Server is running on localhost:3001"));
+app.listen(3001, () => console.log("Server is running on localhost"));

@@ -21,7 +21,7 @@
     "build-dev": "webpack --watch --mode=development",
     "build-prod": "webpack --watch --mode=production",
     "test": "jest",
-    "server": "node-env-run server --exec nodemon | pino-colada",
+    "start": "node ./database/seed/index.js & node-env-run server --exec nodemon | pino-colada",
     "seed": "node ./database/seed/index.js &"
   },
   "eslintConfig": {

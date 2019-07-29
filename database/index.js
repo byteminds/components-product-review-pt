@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/reviewdb", { useNewUrlParser: true });
+mongoose.connect("mongodb://mongo:27017/reviewdb", { useNewUrlParser: true }).catch(error => console.log(error));
 
 let reviewSchema = mongoose.Schema({
   reviewId: { type: Number, unique: true },
