@@ -40,7 +40,7 @@ describe("summary", () => {
   let db;
   let fakerize = require("./seed/fakedata");
   beforeAll(async () => {
-    connection = await mongoose.connect("mongodb://localhost/reviewdb", {
+    connection = await mongoose.connect("mongodb://mongo:27017/reviewdb", {
       useNewUrlParser: true
     });
     db = await mongoose.connection;

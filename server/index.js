@@ -7,10 +7,14 @@ const app = express();
 
 // app.use(cors());
 app.use(express.static(path.join(__dirname, "../client/dist")));
-app.use("/reviews/:productId", express.static(path.join(__dirname, "../client/dist")));
+app.use(
+  "/reviews/:productId",
+  express.static(path.join(__dirname, "../client/dist"))
+);
 
 app.get("/reviews/api/:productId", (req, res) => {
   const productId = req.params.productId;
+  console.log("PRODUCTID =====>>>>> ", productId);
   db.getReviews(productId, (err, reviews) => {
     if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
     res.send(reviews);

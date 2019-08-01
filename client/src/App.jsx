@@ -30,7 +30,9 @@ class App extends React.Component {
 
   componentDidMount() {
     var urlparse = window.location.href.split("/");
-    var productId = urlparse[urlparse.length - 2];
+    var productId = isNaN(urlparse[urlparse.length - 2])
+      ? urlparse[urlparse.length - 2]
+      : 1;
     console.log("URLPARSER ===> ", urlparse);
 
     axios

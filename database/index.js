@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
+mongoose.set("useCreateIndex", true);
 mongoose.connect("mongodb://mongo:27017/reviewdb", { useNewUrlParser: true }).catch(error => console.log(error));
+
+// mongoose
+//   .connect("mongodb://0.0.0.0:27017/reviewdb", { useNewUrlParser: true })
+//   .catch(error => console.log(error));
 
 let reviewSchema = mongoose.Schema({
   reviewId: { type: Number, unique: true },

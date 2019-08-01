@@ -1,6 +1,6 @@
 const fakedata = require("./fakedata");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/reviewdb", { useNewUrlParser: true });
+mongoose.connect("mongodb://mongo:27017/reviewdb", { useNewUrlParser: true });
 
 let reviewSchema = mongoose.Schema({
   reviewId: { type: Number, unique: true },
