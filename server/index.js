@@ -1,3 +1,4 @@
+var compression = require('compression');
 const express = require("express");
 const db = require("../database/index");
 const path = require("path");
