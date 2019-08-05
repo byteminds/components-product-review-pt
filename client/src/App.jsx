@@ -10,7 +10,8 @@ class App extends React.Component {
     this.state = {
       productId: 1,
       reviewDataSet: [],
-      summary: { total: -1, avgRating: -1 }
+      summary: { total: -1, avgRating: -1 },
+      errorStatus: true
     };
   }
 
@@ -30,16 +31,30 @@ class App extends React.Component {
 
   componentDidMount() {
     var urlparse = window.location.href.split("/");
-    var productId = isNaN(urlparse[urlparse.length - 2])
-      ? urlparse[urlparse.length - 2]
-      : 1;
-    console.log("URLPARSER ===> ", urlparse);
+    var productId;
+    if (isNaN(urlparse[urlparse.length - 2]) === false) {
+      this.setState({error: false});
+      console.log("PRODUCT ID IS PARSEABLE ==> ", this.state.errorStatus);
+     
+      productId = urlparse[urlparse.length - 2];
+    } else {
+      console.log("PRODUCT ID IS NOT PARSEABLE")
+      this.setState({errorStatus: true});
+      productId = -1;
+    }
+    
+    console.log("ERROR ISNAN STATE ==> ",  isNaN(urlparse[urlparse.length - 2]));
 
+    console.log("URLPARSER WOWOWOWOW===> ", urlparse);
+    console.log("ERROR STATUS ON CLIENT ===> ", this.state.errorStatus);
+    if (productId > -1) {
+    console.log("NO ERROR ON CLIENT!");
     axios
       .get(`/reviews/api/${productId}`)
       .then(res => {
         this.setState({
-          reviewDataSet: res.data
+          reviewDataSet: res.data,
+          errorStatus: false
         });
         var sumRating = 0;
         res.data.forEach(el => {
@@ -54,24 +69,17 @@ class App extends React.Component {
           }
         });
       })
-      // .then(data => {
-      //   var sumRating = 0;
-      //   data.forEach(el => {
-      //     sumRating += el.rating;
-      //   });
-      //   var avgRating = sumRating / data.length;
-      //   avgRating = this.roundToHalf(avgRating);
-      //   this.setState({
-      //     summary: {
-      //       total: data.length,
-      //       avgRating: avgRating
-      //     }
-      //   });
-      // })
       .catch(err => console.log("ERROR: axios.get /api/:productId", err));
+    } else {
+
+    }
   }
 
   render() {
+    if (this.state.error) {
+      return <div>Loading ..</div>
+    }
+    else{
     return (
       <div className="App">
         {this.state.productId > 0 ? (
@@ -87,6 +95,7 @@ class App extends React.Component {
         )}
       </div>
     );
+    }
   }
 }
 

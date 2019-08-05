@@ -37,7 +37,6 @@ let getReviewSummary = (productId, callback) => {
     .sort({ reviewDate: -1 })
     .exec((err, data) => {
       if (err) throw err;
-      //console.log("DATA: ", data);
       data.forEach(review => {
         tmp += review.rating;
       });
