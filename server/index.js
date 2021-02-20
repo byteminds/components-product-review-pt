@@ -1,21 +1,34 @@
+var compression = require('compression');
 const express = require("express");
-const bodyParser = require("body-parser");
-const pino = require("express-pino-logger")();
 const db = require("../database/index");
+const path = require("path");
+// const cors = require("cors");
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(pino);
+app.use(compression())
 
-app.get("/api/:productId/:reviewId/", (req, res) => {
-  // const name = req.query.name || "World";
-  // res.setHeader("Content-Type", "application/json");
-  // res.send(JSON.stringify({ greeting: `Hello ${name}!` }));
+// app.use(cors());
+app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(
+  "/reviews/:productId",
+  express.static(path.join(__dirname, "../client/dist"))
+);
 
+app.get("/reviews/api/:productId", (req, res) => {
   const productId = req.params.productId;
-  const reviewId = req.params.reviewId;
-  db.saveFakeData();
-  res.send(req.url);
+  console.log("PRODUCTID =====>>>>> ", productId);
+  db.getReviews(productId, (err, reviews) => {
+    if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
+    res.send(reviews);
+  });
 });
 
-app.listen(3001, () => console.log("Server is running on localhost:3001"));
+app.get("/api/:productId/summary", (req, res) => {
+  const productId = req.params.productId;
+  db.getReviewSummary(productId, (err, reviews) => {
+    if (err) throw `Server Error Retrieving Reviews for productId:${productId}`;
+    res.send(reviews);
+  });
+});
+
+app.listen(3001, () => console.log("Server is running on localhost"));

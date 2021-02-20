@@ -1,40 +1,52 @@
-const fakedata = require("./fakedata");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/reviewdb", { useNewUrlParser: true });
+mongoose.set("useCreateIndex", true);
+mongoose.connect("mongodb://mongo:27017/reviewdb", { useNewUrlParser: true }).catch(error => console.log(error));
+
+// mongoose
+//   .connect("mongodb://0.0.0.0:27017/reviewdb", { useNewUrlParser: true })
+//   .catch(error => console.log(error));
 
 let reviewSchema = mongoose.Schema({
-  review: {
-    reviewId: Number,
-    reviewerHandle: String,
-    reviewDate: { type: Date, default: Date.now },
-    reviewTitle: String,
-    reviewPara: String,
-    rating: Number,
-    productId: Number,
-    verifiedPurchase: Boolean
-  }
+  reviewId: { type: Number, unique: true },
+  reviewerHandle: String,
+  reviewDate: { type: Date, default: Date.now },
+  reviewTitle: String,
+  reviewPara: String,
+  rating: Number,
+  productId: Number,
+  verifiedPurchase: Boolean
 });
 
 let Reviews = mongoose.model("Reviews", reviewSchema);
 
-// let save = reviews => {
-//   // This function saves a review or reviews to MongoDB
-//   const newReviews = new Reviews(reviews);
-//   newReviews.save(err => {
-//     if (err) console.log("ERROR SAVING TO MONGODB => ", err);
-//     console.log("SUCCESSFUL SAVE");
-//   });
-// };
-
-let saveFakeData = () => {
-  var reviewsDataSet = fakedata.genFakeReviews(1);
-  console.log("FAKE REVIEWS ===> ", reviewsDataSet instanceof Array);
-  const newReviews = new Reviews(reviewsDataSet);
-  newReviews.save(err => {
-    if (err) console.log("ERROR SAVING TO MONGODB => ", err);
-    console.log("SUCCESSFUL SAVE");
-  });
+let getReviews = (productId, callback) => {
+  console.log("GET REVIEW ID", productId);
+  Reviews.find({ productId: productId })
+    .sort({ reviewDate: -1 })
+    .exec((err, data) => {
+      if (err) throw err;
+      //console.log("DATA: ", data);
+      callback(err, data);
+    });
 };
 
-// module.exports.save = save;
-module.exports = { saveFakeData };
+let getReviewSummary = (productId, callback) => {
+  var tmp = 0;
+  var avg = 0;
+  Reviews.find({ productId: productId })
+    .sort({ reviewDate: -1 })
+    .exec((err, data) => {
+      if (err) throw err;
+      data.forEach(review => {
+        tmp += review.rating;
+      });
+      avg = tmp / data.length;
+      callback(err, {
+        productId: productId,
+        avgRating: avg,
+        totalReviews: data.length
+      });
+    });
+};
+
+module.exports = { getReviews, getReviewSummary };
